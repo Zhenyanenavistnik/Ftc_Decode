@@ -9,9 +9,10 @@ public class Player1 implements Runnable{
     Catcher catcher;
     double x,y,rx;
     Odometry odometry;
+    private boolean threadStarted = false;
     public Player1(OpMode op){
         this.op = op;
-        odometry = new Odometry();
+        odometry = new Odometry(op);
         drive = new Mecanum(op,odometry);
         odom = new Thread(odometry);
         catcher = new Catcher(op);
@@ -20,7 +21,10 @@ public class Player1 implements Runnable{
     }
     @Override
     public void run() {
-        odom.start();
+        if(!threadStarted){
+            odom.start();
+            threadStarted = true;
+        }
         y = -op.gamepad1.left_stick_y;
         x = op.gamepad1.left_stick_x * 1.3;
         rx = op.gamepad1.right_stick_x;

@@ -16,7 +16,8 @@ public class Odometry implements Runnable {
 
     public double x,y,head;
 
-    public Odometry(){
+    public Odometry(OpMode op1){
+        op = op1;
         par0 = op.hardwareMap.get(DcMotorEx.class, "leftFront");
         par1 = op.hardwareMap.get(DcMotorEx.class, "leftFront");
         perp = op.hardwareMap.get(DcMotorEx.class, "leftFront");
