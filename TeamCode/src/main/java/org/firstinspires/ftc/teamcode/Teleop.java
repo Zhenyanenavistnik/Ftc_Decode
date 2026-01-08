@@ -5,27 +5,31 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "XIXIXIXIXI")
 public class Teleop extends OpMode {
-    Thread pl1,pl2;
-    private boolean threadStarted = false;
+    Player1 pl_1;
+    Player2 pl_2;
     @Override
     public void init (){
-        pl1 = new Thread(new Player1(this));
+        pl_1 = new Player1(this);
+        pl_2 = new Player2(this);
     }
 
     public void init_loop(){}
 
     public void start() {
+        pl_1.opActive = true;
+        pl_1.start();
+        pl_2.opActive = true;
+        pl_2.start();
         this.telemetry.addLine("Start");
     }
 
     public void loop() {
-        if(!threadStarted){
-            pl1.start();
-            threadStarted = true;
-        }
+        this.telemetry.update();
     }
 
     public void stop(){
+        pl_2.opActive = false;
+        pl_1.opActive = false;
         this.telemetry.addLine("Stop");
     }
 }

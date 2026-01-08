@@ -9,12 +9,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.Base64;
 
-public class Odometry implements Runnable {
+public class Odometry extends Thread {
     OpMode op;
     DcMotorEx par0,par1,perp;
     double par0M = 0,par1M, perpM;
 
     public double x,y,head;
+    public boolean opActive;
 
     public Odometry(OpMode op1){
         op = op1;
@@ -44,11 +45,15 @@ public class Odometry implements Runnable {
             x += fwd * Math.cos(head) - str * Math.sin(head);
             y += str * Math.cos(head) + fwd * Math.sin(head);
         }
-
+        op.telemetry.addData("",x);
+        op.telemetry.addData("",y);
+        op.telemetry.addData("",head);
     }
 
     @Override
     public void run() {
-        update();
+        while (opActive){
+            update();
+        }
     }
 }
