@@ -33,6 +33,25 @@ public class Player2 extends Thread{
             if(op.gamepad2.y){
                 servoMan.down();
             }
+
+            if(op.gamepad2.right_trigger >0.1){
+                servoMan.turner.setPosition(servoMan.turner.getPosition()+0.05);
+            }
+            if(op.gamepad2.left_trigger >0.1){
+                servoMan.turner.setPosition(servoMan.turner.getPosition()-0.05);
+            }
+            if(op.gamepad2.dpad_left){
+                servoMan.plusCatch();
+            }
+            if(op.gamepad2.dpad_right){
+                servoMan.minusCatch();
+            }
+            if(op.gamepad2.dpad_up){
+                servoMan.plusGun();
+            }
+            if(op.gamepad2.dpad_down){
+                servoMan.minusGun();
+            }
             op.telemetry.addData("",servoMan.pusher.getPosition());
         }
     }
