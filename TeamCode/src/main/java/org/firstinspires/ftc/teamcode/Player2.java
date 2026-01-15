@@ -31,7 +31,10 @@ public class Player2{
             gun.aFlag(0.7);
         }
         if(op.gamepad2.x){
-            servoMan.up();
+            if(gun.motor2.getPower()<-0.6 && gun.motor.getPower()>0.6){
+                servoMan.up();
+                servoMan.shot(true);
+            }
         }
         if(op.gamepad2.y){
             servoMan.down();
@@ -44,19 +47,11 @@ public class Player2{
             servoMan.turner.setPosition(servoMan.turner.getPosition()-0.0005);
         }
         if(op.gamepad2.dpad_left){
-            servoMan.plusCatch();
+           cylinder.catcherMode =false;
         }
-        if(op.gamepad2.dpad_right){
-            servoMan.minusCatch();
-        }
-        if(op.gamepad2.dpad_up){
-            servoMan.plusGun();
-        }
-        if(op.gamepad2.dpad_down){
-            servoMan.minusGun();
-        }
+
         //op.telemetry.addData("pusher",servoMan.pusher.getPosition());
-        //op.telemetry.addData("turner",servoMan.turner.getPosition());
+        op.telemetry.addData("turner",servoMan.turner.getPosition());
         //op.telemetry.addData("gun1",gun.motor.getPower());
         //op.telemetry.addData("gun2",gun.motor2.getPower());
 
