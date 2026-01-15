@@ -13,7 +13,7 @@ public class Catcher {
         motor = op.hardwareMap.get(DcMotorEx.class, "Catcher");
     }
     public void setOn(){
-        motor.setPower(1);
+        motor.setPower(0.65);
     }
     public void setOff(){
         motor.setPower(0);

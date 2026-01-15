@@ -16,20 +16,17 @@ public class Teleop extends OpMode {
     public void init_loop(){}
 
     public void start() {
-        pl_1.opActive = true;
-        pl_1.start();
-        pl_2.opActive = true;
-        pl_2.start();
         this.telemetry.addLine("Start");
     }
 
     public void loop() {
+        pl_1.run();
+        pl_2.run();
         this.telemetry.update();
+
     }
 
     public void stop(){
-        pl_2.opActive = false;
-        pl_1.opActive = false;
         this.telemetry.addLine("Stop");
     }
 }

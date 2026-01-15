@@ -16,11 +16,10 @@ public class ServoMan {
     public void init() {
         pusher = op.hardwareMap.get(com.qualcomm.robotcore.hardware.Servo.class, "pusher");
         turner = op.hardwareMap.get(com.qualcomm.robotcore.hardware.Servo.class, "turner");
-        pusher.scaleRange(0, 1);
-        turner.scaleRange(0, 1);
+        pusher.scaleRange(0, 0.365);
+        turner.scaleRange(0.0667, 1);
+        turner.setPosition(0);
 
-        turner.setPosition(0.5);
-        pusher.setPosition(0.5);
     }
     public void up(){
         pusher.setPosition(1);

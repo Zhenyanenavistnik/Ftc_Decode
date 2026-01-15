@@ -12,6 +12,7 @@ public class Mecanum {
     public DcMotor rightFront;
     OpMode op;
     Odometry odometry;
+    double b = 1;
     public Mecanum(OpMode op,Odometry odometry) {
         this.op = op;
         this.odometry = odometry;
@@ -28,14 +29,17 @@ public class Mecanum {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
     }
     public void setDrivePowers(double y,double x,double rx) {
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        leftFront.setPower((y + x + rx)/denominator/4);
-        leftBack.setPower((y - x + rx)/denominator/4);
-        rightBack.setPower((y + x - rx)/denominator/4);
-        rightFront.setPower((y - x - rx)/denominator/4);
+        leftFront.setPower((y + x + rx)/denominator/b);
+        leftBack.setPower((y - x + rx)/denominator/b);
+        rightBack.setPower((y + x - rx)/denominator/b);
+        rightFront.setPower((y - x - rx)/denominator/b);
     }
     public void GoToPoint(double x,double y, double turn){
         double errorX  = x - odometry.x;

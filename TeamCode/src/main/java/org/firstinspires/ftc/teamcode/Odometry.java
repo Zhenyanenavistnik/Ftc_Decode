@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.Base64;
 
-public class Odometry extends Thread {
+public class Odometry{
     OpMode op;
     DcMotorEx par0,par1,perp;
     double par0M = 0,par1M, perpM;
@@ -19,9 +19,9 @@ public class Odometry extends Thread {
 
     public Odometry(OpMode op1){
         op = op1;
-        par0 = op.hardwareMap.get(DcMotorEx.class, "leftFront");
-        par1 = op.hardwareMap.get(DcMotorEx.class, "leftFront");
-        perp = op.hardwareMap.get(DcMotorEx.class, "leftFront");
+        par0 = op.hardwareMap.get(DcMotorEx.class, "rightFront");
+        par1 = op.hardwareMap.get(DcMotorEx.class, "rightBack");
+        perp = op.hardwareMap.get(DcMotorEx.class, "leftBack");
 
     }
     public void update() {
@@ -45,15 +45,13 @@ public class Odometry extends Thread {
             x += fwd * Math.cos(head) - str * Math.sin(head);
             y += str * Math.cos(head) + fwd * Math.sin(head);
         }
-        op.telemetry.addData("",x);
-        op.telemetry.addData("",y);
-        op.telemetry.addData("",head);
+        op.telemetry.addData("x",x);
+        op.telemetry.addData("y",y);
+        op.telemetry.addData("head",head);
     }
 
-    @Override
     public void run() {
-        while (opActive){
             update();
-        }
+
     }
 }
