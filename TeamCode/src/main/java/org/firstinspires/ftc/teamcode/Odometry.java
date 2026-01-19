@@ -5,53 +5,105 @@ import static org.firstinspires.ftc.teamcode.Consts.DISTANCE_BETWEEN_PODS_Y;
 import static org.firstinspires.ftc.teamcode.Consts.METER_PER_COUNT;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-
-import java.util.Base64;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Odometry{
     OpMode op;
     DcMotorEx par0,par1,perp;
-    double par0M = 0,par1M, perpM;
 
-    public double x,y,head;
+    public double x,y,heading;
+    double lastPar0,lastPar1,lastPerp;
     public boolean opActive;
+    double dt;
+    double oldTime;
+    public Vector2 velocity,oldVelocity;
+    ElapsedTime runtime;
+    double dPar0,dPar1,dPepr;
+    Position deltaPosition;                                   // Относительное перемещение
+    Position globalPosition;
 
     public Odometry(OpMode op1){
         op = op1;
-        par0 = op.hardwareMap.get(DcMotorEx.class, "rightFront");
-        par1 = op.hardwareMap.get(DcMotorEx.class, "rightBack");
-        perp = op.hardwareMap.get(DcMotorEx.class, "leftBack");
+        runtime = new ElapsedTime();
+        globalPosition = new Position();
+        deltaPosition = new Position();
+        velocity = new Vector2();
+        oldVelocity = new Vector2();
+        par0 = op.hardwareMap.get(DcMotorEx.class, "rightBack");
+        par1 = op.hardwareMap.get(DcMotorEx.class, "leftBack");
+        perp = op.hardwareMap.get(DcMotorEx.class, "leftFront");
+        par0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        par1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        perp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        lastPar0 = -par0.getCurrentPosition();
+        lastPar1 = par1.getCurrentPosition();
+        lastPerp = -perp.getCurrentPosition();
 
     }
     public void update() {
-        par0M = par0.getCurrentPosition() / METER_PER_COUNT - par0M;
-        par1M = par1.getCurrentPosition() / METER_PER_COUNT - par1M;
-        perpM = perp.getCurrentPosition() / METER_PER_COUNT - perpM;
+        double curPar0 = -par0.getCurrentPosition();
+        double curPar1 = par1.getCurrentPosition();
+        double curPerp = -perp.getCurrentPosition();
 
-        double fwd = (par0M + par1M) / 2;
-        head = (par0M + par1M) / DISTANCE_BETWEEN_PODS_Y;
-        double str = perpM - DISTANCE_BETWEEN_PODS_X * head;
-        if(head != 0){
-            double r0 = fwd/head;
-            double r1 = str/head;
+        double d0 = curPar0-lastPar0;
+        double d1 = curPar1-lastPar1;
+        double d2 = curPerp-lastPerp;
 
-            double relX = r0 * Math.sin(head) - r1 * (1- Math.cos(head));
-            double relY = r1 * Math.sin(head) - r0 * (1- Math.cos(head));
+        lastPar0 = curPar0;
+        lastPar1 = curPar1;
+        lastPerp = curPerp;
 
-            x += relX * Math.cos(head) - relY * Math.sin(head);
-            y += relY * Math.cos(head) + relX * Math.sin(head);
-        }else{
-            x += fwd * Math.cos(head) - str * Math.sin(head);
-            y += str * Math.cos(head) + fwd * Math.sin(head);
-        }
+        dPar0 = d0*METER_PER_COUNT;
+        dPar1 = d1*METER_PER_COUNT;
+        dPepr = d2*METER_PER_COUNT;
+
+        double fwd = (dPar0 + dPar1) / 2;
+        double head = (dPar0 - dPar1) / DISTANCE_BETWEEN_PODS_Y;
+        double str = dPepr - DISTANCE_BETWEEN_PODS_X * head;
+        double mid = heading + head/2;
+
+        x += fwd * Math.cos(mid) - str * Math.sin(mid);
+        y += str * Math.cos(mid) + fwd * Math.sin(mid);
+        heading += head;
+
+        deltaPosition.setHeading(head);
+        deltaPosition.setX(fwd);
+        deltaPosition.setY(str);
+
+        globalPosition.add(Vector2.rotate(deltaPosition.toVector(), globalPosition.getHeading()) , deltaPosition.getHeading());
+        globalPosition.setHeading(globalPosition.getHeading());
+
+
         op.telemetry.addData("x",x);
         op.telemetry.addData("y",y);
-        op.telemetry.addData("head",head);
+        op.telemetry.addData("head",heading);
+        op.telemetry.addData("heading",Math.toDegrees(heading));
+        op.telemetry.addData("cPar0",curPar0);
+        op.telemetry.addData("cPar1",curPar1);
+        op.telemetry.addData("cPerp",curPerp);
+    }
+    private synchronized void updateVelocity(){
+        dt = (runtime.milliseconds() - oldTime)/1000.0;// считаем время одного цикла
+        oldTime = runtime.milliseconds();
+
+        oldVelocity.x = velocity.x;
+        oldVelocity.y = velocity.y;
+
+        velocity.x = (deltaPosition.toVector().x)/dt;
+        velocity.y = (deltaPosition.toVector().y)/dt;
+
     }
 
     public void run() {
-            update();
-
+        update();
+        updateVelocity();
+        op.telemetry.addData("dt",dt);
+        op.telemetry.addData("oldTime",oldTime);
+        op.telemetry.addData("velocity",velocity);
+        op.telemetry.addData("oldVelocity",oldVelocity);
     }
 }

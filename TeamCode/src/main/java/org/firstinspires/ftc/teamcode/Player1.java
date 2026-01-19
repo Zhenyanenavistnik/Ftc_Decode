@@ -28,5 +28,8 @@ public class Player1 {
         if (op.gamepad1.b) {
             catcher.setOff();
         }
+        if (op.gamepad1.y) {
+            catcher.setOnMinus();
+        }
     }
 }

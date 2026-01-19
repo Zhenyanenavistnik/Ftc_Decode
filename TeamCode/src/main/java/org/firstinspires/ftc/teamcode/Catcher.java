@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Catcher {
     DcMotorEx motor;
     OpMode op;
+    double a = 1;
     public Catcher(OpMode op){
         this.op = op;
     }
@@ -13,9 +14,12 @@ public class Catcher {
         motor = op.hardwareMap.get(DcMotorEx.class, "Catcher");
     }
     public void setOn(){
-        motor.setPower(0.65);
+        motor.setPower(a);
     }
     public void setOff(){
         motor.setPower(0);
+    }
+    public void setOnMinus(){
+        motor.setPower(-a);
     }
 }

@@ -32,6 +32,11 @@ public class Mecanum {
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
     public void setDrivePowers(double y,double x,double rx) {
 
@@ -44,8 +49,8 @@ public class Mecanum {
     public void GoToPoint(double x,double y, double turn){
         double errorX  = x - odometry.x;
         double errorY = y - odometry.y;
-        double errorT = turn - odometry.head;
-        if(Math.abs(errorX) >0.05 && Math.abs(errorY)>0.05 && Math.abs(errorT)>0.05){
+        double errorT = turn - odometry.heading;
+        if(Math.abs(errorX) >0.05 || Math.abs(errorY)>0.05 || Math.abs(errorT)>0.05){
             setDrivePowers(errorY,errorX,errorT);
         }
     }
