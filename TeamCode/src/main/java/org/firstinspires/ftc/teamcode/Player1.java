@@ -18,10 +18,10 @@ public class Player1 {
     }
     public void run() {
         odometry.run();
-        y = -op.gamepad1.left_stick_y;
-        x = op.gamepad1.left_stick_x * 1.3;
+        x = -op.gamepad1.left_stick_y;
+        y = op.gamepad1.left_stick_x ;
         rx = op.gamepad1.right_stick_x;
-        drive.setDrivePowers(y, x, rx);
+        drive.setDrivePowers(x, y, rx);
         if (op.gamepad1.a) {
             catcher.setOn();
         }
@@ -30,6 +30,12 @@ public class Player1 {
         }
         if (op.gamepad1.y) {
             catcher.setOnMinus();
+        }
+        if(op.gamepad1.dpad_up){
+            drive.b = 1;
+        }
+        if(op.gamepad1.dpad_down){
+            drive.b = 2;
         }
     }
 }

@@ -46,11 +46,11 @@ public class PID {
         error = target - current;
 
         P = error * kP;
-        I += error * (runtime.milliseconds() - oldtime) * kI;
-        D = (error - olderror) /(runtime.milliseconds() - oldtime) * kD;
+        I += error * (runtime.seconds() - oldtime) * kI;
+        D = (error - olderror) /(runtime.seconds() - oldtime) * kD;
 
         olderror = error;
-        oldtime = runtime.milliseconds();
+        oldtime = runtime.seconds();
 
         return P + Range.clip(I, minI, maxI) + D;
     }

@@ -9,7 +9,7 @@ public class Gun {
     DcMotorEx motor2;
     DcMotorEx led;
     OpMode op;
-    double a = 1420;
+    double a = 1435;
     int tickPerRound = 28;
     int round =5500;
     public Gun(OpMode op){

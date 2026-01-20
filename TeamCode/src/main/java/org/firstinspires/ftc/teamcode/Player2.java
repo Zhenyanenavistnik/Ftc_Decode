@@ -36,7 +36,7 @@ public class Player2{
                 gun.setOn();
         }
         if(op.gamepad2.a){
-            gun.aFlag(1385);
+            gun.aFlag(1435);
         }
         if(op.gamepad2.b){
             gun.aFlag(1125);
@@ -60,6 +60,9 @@ public class Player2{
             cylinder.firstFreePosition = 0;
             cylinder.lastFullPosition = 0;
             cylinder.priorityCell = 0;
+            cylinder.detectedArray[0] = Detected.UNKNON;
+            cylinder.detectedArray[1] = Detected.UNKNON;
+            cylinder.detectedArray[2] = Detected.UNKNON;
         }
         if(canShot){
             if(timer && !cylinder.catcherMode){

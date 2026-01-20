@@ -17,6 +17,7 @@ public class Test extends LinearOpMode {
     Mecanum mecanum;
     Odometry odometry;
     int shots;
+    Robot robot;
     boolean mec;
     public void runOpMode()  {
         odometry = new Odometry(this);
@@ -32,6 +33,8 @@ public class Test extends LinearOpMode {
         motif  = new Detected[3];
         elapsedTime = new ElapsedTime();
         mecanum.init();
+        robot = new Robot(this,odometry,mecanum);
+        robot.init();
         while (!isStarted() && !isStopRequested()){
             camera.update();
             motif = camera.motif;
@@ -43,7 +46,7 @@ public class Test extends LinearOpMode {
         waitForStart();
         cylinder.motif =motif;
         while (opModeIsActive()){
-            if(shots >=3){
+            if(shots >=3 && elapsedTime.milliseconds() > 500){
                 shots = 0;
                 mec = true;
                 gun.setOff();
@@ -52,7 +55,7 @@ public class Test extends LinearOpMode {
             cylinder.run();
             gun.run();
             if(mec){
-                mecanum.GoToPoint(1,0,0);
+                robot.goToPoint(new Position(1,-1,0),10);
             }
             if(!cylinder.catcherMode && !mec){
                 gun.setOn();
@@ -64,11 +67,12 @@ public class Test extends LinearOpMode {
                canShot = true;
                 this.telemetry.addData("2",cylinder.catcherMode);
             }
-            if(!cylinder.catcherMode && elapsedTime.milliseconds() > 5000){
+            if(!cylinder.catcherMode && elapsedTime.milliseconds() > 2800){
                 servoMan.up();
                 servoMan.shot(true);
                 canShot = false;
                 shots++;
+                elapsedTime.reset();
                 this.telemetry.addData("3",cylinder.catcherMode);
             }
             this.telemetry.addData("shots",shots);

@@ -42,7 +42,13 @@ public class Odometry{
         lastPar0 = -par0.getCurrentPosition();
         lastPar1 = par1.getCurrentPosition();
         lastPerp = -perp.getCurrentPosition();
-
+        normalizeHeading();
+    }
+    private void normalizeHeading() {
+        double heading = globalPosition.getHeading();
+        while (heading > Math.PI) heading -= 2 * Math.PI;
+        while (heading < -Math.PI) heading += 2 * Math.PI;
+        globalPosition.setHeading(heading);
     }
     public void update() {
         double curPar0 = -par0.getCurrentPosition();
@@ -74,8 +80,7 @@ public class Odometry{
         deltaPosition.setX(fwd);
         deltaPosition.setY(str);
 
-        globalPosition.add(Vector2.rotate(deltaPosition.toVector(), globalPosition.getHeading()) , deltaPosition.getHeading());
-        globalPosition.setHeading(globalPosition.getHeading());
+        globalPosition.add(Vector2.rotate(deltaPosition.toVector(), mid) , head);
 
 
         op.telemetry.addData("x",x);
@@ -88,6 +93,7 @@ public class Odometry{
     }
     private synchronized void updateVelocity(){
         dt = (runtime.milliseconds() - oldTime)/1000.0;// считаем время одного цикла
+        if(dt < 0.01)return;
         oldTime = runtime.milliseconds();
 
         oldVelocity.x = velocity.x;

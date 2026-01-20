@@ -91,10 +91,10 @@ public class Cylinder2 {
                         servoMan.turner.setPosition(0);
                         break;
                     case 1:
-                        servoMan.turner.setPosition(0.401);
+                        servoMan.turner.setPosition(0.4);
                         break;
                     case 2:
-                        servoMan.turner.setPosition(0.815);
+                        servoMan.turner.setPosition(0.785);
                         break;
                 }
             } else{
@@ -106,7 +106,7 @@ public class Cylinder2 {
                         servoMan.turner.setPosition(0.97);
                         break;
                     case 2:
-                        servoMan.turner.setPosition(0.225);
+                        servoMan.turner.setPosition(0.21);
                         break;
                 }
             }
@@ -168,7 +168,7 @@ public class Cylinder2 {
             elapsedTime1.reset();
             return Detected.UNKNON;
         }else{
-            if(elapsedTime1.milliseconds() >= 1000){
+            if(elapsedTime1.milliseconds() >= 650){
                 elaps1 =false;
                 if( blue > green ){
                     elapsedTime3.reset();
