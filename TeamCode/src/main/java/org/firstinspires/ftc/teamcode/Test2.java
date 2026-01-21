@@ -8,17 +8,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Test2 extends LinearOpMode {
     ElapsedTime elapsedTime;
     Robot robot;
+    Odometry odometry;
     boolean mec;
     public void runOpMode()  {
         elapsedTime = new ElapsedTime();
         robot = new Robot(this);
         robot.init();
+        odometry = new Odometry(this);
         while (!isStarted() && !isStopRequested()){
             telemetry.update();
         }
         waitForStart();
-        robot.goToPoint(new Position(1, 0, 0), 15);
         while (opModeIsActive()) {
+            odometry.run();
+            robot.goToPoint(new Position(1, 0, 0), 15,odometry);
             telemetry.update();
         }
     }

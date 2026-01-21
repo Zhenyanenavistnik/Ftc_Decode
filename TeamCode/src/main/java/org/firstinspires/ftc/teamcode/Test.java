@@ -21,7 +21,7 @@ public class Test extends LinearOpMode {
     boolean mec;
     public void runOpMode()  {
         odometry = new Odometry(this);
-        mecanum = new Mecanum(this,odometry);
+        mecanum = new Mecanum(this);
         gun = new Gun(this);
         gun.init();
         servoMan = new ServoMan(this);
@@ -55,7 +55,7 @@ public class Test extends LinearOpMode {
             cylinder.run();
             gun.run();
             if(mec){
-                robot.goToPoint(new Position(1,-1,0),10);
+                robot.goToPoint(new Position(1,-1,0),10,odometry);
             }
             if(!cylinder.catcherMode && !mec){
                 gun.setOn();

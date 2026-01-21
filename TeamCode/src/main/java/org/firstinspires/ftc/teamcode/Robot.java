@@ -8,25 +8,25 @@ public class Robot {
     boolean timeFlagg;
     ElapsedTime delayTime;
     Mecanum mecanum;
-    Odometry odometry;
+    //Odometry odometry;
     LinearOpMode op;
     boolean moveComplete;
     double I = 0.7;
-    double kPang = 0.02;
-    double kPlin = 0.2;
-    public final PID pidLinearX = new PID(kPlin,0.000005,0.0001, -I,I);
-    public final PID pidLinearY = new PID(kPlin,0.000005,0.0001, -I,I);
-    public final PID pidAngular = new PID(kPang,0.000005,0.000001, -I,I);
+    double kPang = 0.022;
+    double kPlin = 0.035;
+    public final PID pidLinearX = new PID(kPlin,0.000000,0.0000, -I,I);
+    public final PID pidLinearY = new PID(kPlin,0.00000,0.0000, -I,I);
+    public final PID pidAngular = new PID(kPang,0.00000,0.0000, -I,I);
 
     public Robot(LinearOpMode op){
         this.op = op;
-        odometry = new Odometry(op);
-        mecanum = new Mecanum(op,odometry);
+        //odometry = new Odometry(op);
+        mecanum = new Mecanum(op);
     }
     public void init(){
         mecanum.init();
     }
-    public void goToPoint(Position position, double seconds) {
+    public void goToPoint(Position position, double seconds,Odometry odometry) {
         if(!timeFlagg){
             delayTime = new ElapsedTime();
             timeFlagg = true;
@@ -34,10 +34,10 @@ public class Robot {
             pidLinearY.reset();
             pidAngular.reset();
         }
-        while (op.opModeIsActive() && !moveComplete) {
+        if (op.opModeIsActive() && !moveComplete) {
             if (delayTime.seconds() >= seconds) {
                 mecanum.offMotors();
-                moveComplete = false;
+                moveComplete = true;
                 timeFlagg = false;
                 return;
             }
@@ -52,7 +52,7 @@ public class Robot {
             // Находим ошибку положения
             errorPos.x = position.getX() - odometry.globalPosition.getX();
             errorPos.y = position.getY() - odometry.globalPosition.getY();
-            double errorHeading = position.getHeading() - odometry.globalPosition.getHeading();
+            double errorHeading = normalizeAngle(position.getHeading() - odometry.globalPosition.getHeading());
 
             // Направление движения
             Vector2 targetVel = new Vector2(errorPos);
@@ -78,7 +78,7 @@ public class Robot {
             // Передаем требуемые скорости в ПИД для расчета напряжения на моторы
             double speedPIDX = pidLinearX.calculate(targetVel.x, odometry.velocity.x);
             double speedPIDY = pidLinearY.calculate(targetVel.y, odometry.velocity.y);
-            //double angularPID = pidAngular.calculate(position.getHeading(), odometry.heading);
+            double angularPID = pidAngular.calculate(position.getHeading(), odometry.globalPosition.getHeading());
 
             if (errorPosDone && errorHeadingDone) {
                 moveComplete = true;
@@ -88,9 +88,14 @@ public class Robot {
             } else {
                  moveComplete = false;
 
-                mecanum.setDrivePowers(speedPIDX, -speedPIDY, 0);
+                mecanum.setDrivePowers(speedPIDX, -speedPIDY, angularPID);
             }
         }
+    }
+    private static double normalizeAngle(double a) {
+        while (a > Math.PI) a -= 2 * Math.PI;
+        while (a < -Math.PI) a += 2 * Math.PI;
+        return a;
     }
 }
 

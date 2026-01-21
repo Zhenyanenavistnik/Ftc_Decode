@@ -71,7 +71,7 @@ public class Odometry{
         double fwd = (dPar0 + dPar1) / 2;
         double head = (dPar0 - dPar1) / DISTANCE_BETWEEN_PODS_Y;
         double str = dPepr - DISTANCE_BETWEEN_PODS_X * head;
-        double mid = heading + head/2;
+        double mid = globalPosition.getHeading() + head/2;
 
         x += fwd * Math.cos(mid) - str * Math.sin(mid);
         y += str * Math.cos(mid) + fwd * Math.sin(mid);
@@ -90,11 +90,15 @@ public class Odometry{
         op.telemetry.addData("cPar0",curPar0);
         op.telemetry.addData("cPar1",curPar1);
         op.telemetry.addData("cPerp",curPerp);
+        op.telemetry.addData("glX",globalPosition.getX());
+        op.telemetry.addData("glY",globalPosition.getY());
+        op.telemetry.addData("glHead",globalPosition.getHeading());
+
     }
     private synchronized void updateVelocity(){
         dt = (runtime.milliseconds() - oldTime)/1000.0;// считаем время одного цикла
-        if(dt < 0.01)return;
         oldTime = runtime.milliseconds();
+        if(dt<0.01)return;
 
         oldVelocity.x = velocity.x;
         oldVelocity.y = velocity.y;

@@ -11,11 +11,9 @@ public class Mecanum {
     public DcMotor rightBack;
     public DcMotor rightFront;
     OpMode op;
-    Odometry odometry;
     double b = 1;
-    public Mecanum(OpMode op,Odometry odometry) {
+    public Mecanum(OpMode op) {
         this.op = op;
-        this.odometry = odometry;
     }
     public void init(){
         leftFront = op.hardwareMap.get(DcMotorEx.class, "leftFront");

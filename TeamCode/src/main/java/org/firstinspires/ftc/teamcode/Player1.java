@@ -11,7 +11,7 @@ public class Player1 {
     public Player1(OpMode op){
         this.op = op;
         odometry = new Odometry(op);
-        drive = new Mecanum(op,odometry);
+        drive = new Mecanum(op);
         catcher = new Catcher(op);
         drive.init();
         catcher.init();
