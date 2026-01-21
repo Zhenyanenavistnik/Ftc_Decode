@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "auto2")
 public class Test2 extends LinearOpMode {
+    double metrX = 0.9;
+    double metrY = 1.35;
     ElapsedTime elapsedTime;
     Robot robot;
     Odometry odometry;
