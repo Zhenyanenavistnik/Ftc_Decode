@@ -21,7 +21,7 @@ public class Test2 extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             odometry.run();
-            robot.goToPoint(new Position(1, 0, 0), 15,odometry);
+            robot.goToPoint(new Position(1, 1, 90), 15,odometry);
             telemetry.update();
         }
     }
