@@ -37,12 +37,13 @@ public class Odometry{
         par0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         par1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         perp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        par0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        par1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        perp.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         lastPar0 = -par0.getCurrentPosition();
         lastPar1 = par1.getCurrentPosition();
         lastPerp = -perp.getCurrentPosition();
-        normalizeHeading();
     }
     private void normalizeHeading() {
         double heading = globalPosition.getHeading();
@@ -81,8 +82,7 @@ public class Odometry{
         deltaPosition.setY(str);
 
         globalPosition.add(Vector2.rotate(deltaPosition.toVector(), mid) , head);
-
-
+        normalizeHeading();
         op.telemetry.addData("x",x);
         op.telemetry.addData("y",y);
         op.telemetry.addData("head",heading);
@@ -111,5 +111,6 @@ public class Odometry{
         op.telemetry.addData("oldTime",oldTime);
         op.telemetry.addData("velocity",velocity);
         op.telemetry.addData("oldVelocity",oldVelocity);
+        op.telemetry.update();
     }
 }

@@ -33,7 +33,7 @@ public class Test extends LinearOpMode {
         motif  = new Detected[3];
         elapsedTime = new ElapsedTime();
         mecanum.init();
-        robot = new Robot(this,odometry,mecanum);
+        robot = new Robot(this);
         robot.init();
         while (!isStarted() && !isStopRequested()){
             camera.update();
