@@ -70,18 +70,18 @@ public class Odometry{
 
         double fwd = (dPar0 + dPar1) / 2;
         double head = (dPar0 - dPar1) / DISTANCE_BETWEEN_PODS_Y;
-        double str = dPepr - DISTANCE_BETWEEN_PODS_X * head;
+        double str = dPepr;// - DISTANCE_BETWEEN_PODS_X * head;
         double mid = globalPosition.getHeading() + head/2;
 
-        x += fwd * Math.cos(mid) - str * Math.sin(mid);
-        y += str * Math.cos(mid) + fwd * Math.sin(mid);
+        x += fwd * Math.cos(head) - str * Math.sin(head);
+        y += str * Math.cos(head) + fwd * Math.sin(head);
         heading += head;
 
         deltaPosition.setHeading(head);
         deltaPosition.setX(fwd);
         deltaPosition.setY(str);
 
-        globalPosition.add(Vector2.rotate(deltaPosition.toVector(), mid) , head);
+        globalPosition.add(Vector2.rotate(deltaPosition.toVector(), head) , head);
         normalizeHeading();
         op.telemetry.addData("x",x);
         op.telemetry.addData("y",y);
@@ -115,6 +115,6 @@ public class Odometry{
         op.telemetry.addData("oldTime",oldTime);
         op.telemetry.addData("velocity",velocity);
         op.telemetry.addData("oldVelocity",oldVelocity);
-        op.telemetry.update();
+        //op.telemetry.update();
     }
 }

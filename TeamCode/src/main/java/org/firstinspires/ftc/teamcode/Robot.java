@@ -12,11 +12,11 @@ public class Robot {
     LinearOpMode op;
     boolean moveComplete;
     double I = 0.7;
-    double kPang = 0.08;
-    double kPlin = 0.035;
-    public final PID pidLinearX = new PID(kPlin,0.000000,0.0000, -I,I);
-    public final PID pidLinearY = new PID(kPlin,0.00000,0.0000, -I,I);
-    public final PID pidAngular = new PID(kPang,0.00001,0.0000, -I,I);
+    double kPang = 0.45;
+    double kPlin = 0.02;
+    public final PID pidLinearX = new PID(kPlin,0.000003,0.0000, -I,I);
+    public final PID pidLinearY = new PID(kPlin,0.00003,0.0000, -I,I);
+    public final PID pidAngular = new PID(kPang,0.002,0.00001, -I,I);
 
     public Robot(LinearOpMode op){
         this.op = op;
@@ -38,7 +38,6 @@ public class Robot {
                 timeFlagg = false;
                 return;
             }
-            odometry.run();
             boolean errorPosDone = false;
             boolean errorHeadingDone = false;
 
@@ -58,12 +57,12 @@ public class Robot {
 
             linearVel = 22;
 
-            if (errorPos.length() < 0.02) {
+            if (errorPos.length() < 0.01) {
                 errorPosDone = true;
                 linearVel = 0;
             }
 
-            if (Math.abs(errorHeading) < Math.toRadians(0.5)) {
+            if (Math.abs(errorHeading) < Math.toRadians(0.30)) {
                 errorHeadingDone = true;
                 //kPang = 0.0;
             }
@@ -82,6 +81,9 @@ public class Robot {
                 delayTime.reset();
                 mecanum.offMotors();
                 timeFlagg = false;
+                pidLinearX.reset();
+                pidLinearY.reset();
+                pidAngular.reset();
 
             } else {
                  moveComplete = false;
