@@ -43,7 +43,7 @@ public class Odometry{
 
         lastPar0 = -par0.getCurrentPosition();
         lastPar1 = par1.getCurrentPosition();
-        lastPerp = -perp.getCurrentPosition();
+        lastPerp = perp.getCurrentPosition();
     }
     private void normalizeHeading() {
         double heading = globalPosition.getHeading();
@@ -54,7 +54,7 @@ public class Odometry{
     public void update() {
         double curPar0 = -par0.getCurrentPosition();
         double curPar1 = par1.getCurrentPosition();
-        double curPerp = -perp.getCurrentPosition();
+        double curPerp = perp.getCurrentPosition();
 
         double d0 = curPar0-lastPar0;
         double d1 = curPar1-lastPar1;
@@ -73,13 +73,13 @@ public class Odometry{
         double str = dPepr;// - DISTANCE_BETWEEN_PODS_X * head;
         double mid = globalPosition.getHeading() + head/2;
 
-        x += fwd * Math.cos(head) - str * Math.sin(head);
-        y += str * Math.cos(head) + fwd * Math.sin(head);
+        y += fwd * Math.cos(head) - str * Math.sin(head);
+        x += str * Math.cos(head) + fwd * Math.sin(head);
         heading += head;
 
         deltaPosition.setHeading(head);
-        deltaPosition.setX(fwd);
-        deltaPosition.setY(str);
+        deltaPosition.setX(str);
+        deltaPosition.setY(fwd);
 
         globalPosition.add(Vector2.rotate(deltaPosition.toVector(), head) , head);
         normalizeHeading();

@@ -12,11 +12,11 @@ public class Robot {
     LinearOpMode op;
     boolean moveComplete;
     double I = 0.7;
-    double kPang = 0.45;
-    double kPlin = 0.02;
-    public final PID pidLinearX = new PID(kPlin,0.000003,0.0000, -I,I);
+    double kPang = 0.7;
+    double kPlin = 0.025;
+    public final PID pidLinearX = new PID(kPlin,0.00003,0.0000, -I,I);
     public final PID pidLinearY = new PID(kPlin,0.00003,0.0000, -I,I);
-    public final PID pidAngular = new PID(kPang,0.002,0.00001, -I,I);
+    public final PID pidAngular = new PID(kPang,0.00002,0.0000, -I,I);
 
     public Robot(LinearOpMode op){
         this.op = op;
@@ -55,9 +55,9 @@ public class Robot {
             targetVel.normalize();
             targetVel.rotate(-odometry.globalPosition.getHeading());
 
-            linearVel = 22;
+            linearVel = 20;
 
-            if (errorPos.length() < 0.01) {
+            if (errorPos.length() < 0.03) {
                 errorPosDone = true;
                 linearVel = 0;
             }
@@ -77,18 +77,19 @@ public class Robot {
             double angularPID = pidAngular.calculate(position.getHeading(), odometry.globalPosition.getHeading());
 
             if (errorPosDone && errorHeadingDone) {
-                moveComplete = false;
-                delayTime.reset();
+                moveComplete = true;
+                //delayTime.reset();
                 mecanum.offMotors();
-                timeFlagg = false;
+                //timeFlagg = false;
                 pidLinearX.reset();
                 pidLinearY.reset();
                 pidAngular.reset();
+                op.telemetry.addData("positonComplete",true);
 
             } else {
                  moveComplete = false;
 
-                mecanum.setDrivePowers(speedPIDX, -speedPIDY, angularPID);
+                mecanum.setDrivePowers(speedPIDX, speedPIDY, angularPID);
             }
         }
     }

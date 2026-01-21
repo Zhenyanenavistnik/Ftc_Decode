@@ -22,9 +22,23 @@ public class Test2 extends LinearOpMode {
         }
         waitForStart();
         while (opModeIsActive()) {
-            odometry.run();
-            robot.goToPoint(new Position(0.9*2, 1.36, 0), 15,odometry);
-            telemetry.update();
+            while (!robot.moveComplete && opModeIsActive()){
+                odometry.run();
+                robot.goToPoint(new Position(-0.07, 0.7, 0), 5,odometry);
+                telemetry.update();
+            }
+            robot.moveComplete = false;
+            while (!robot.moveComplete && opModeIsActive()){
+                odometry.run();
+                robot.goToPoint(new Position(odometry.globalPosition.getX(), odometry.globalPosition.getY(), -80), 3,odometry);
+                telemetry.update();
+            }
+            robot.moveComplete = false;
+            while (!robot.moveComplete && opModeIsActive()){
+                odometry.run();
+                robot.goToPoint(new Position(-1.07, odometry.globalPosition.getY(), odometry.globalPosition.getHeading()), 3,odometry);
+                telemetry.update();
+            }
         }
     }
 

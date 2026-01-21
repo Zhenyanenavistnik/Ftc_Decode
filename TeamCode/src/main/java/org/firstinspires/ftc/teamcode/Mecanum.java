@@ -39,10 +39,10 @@ public class Mecanum {
     public void setDrivePowers(double x,double y,double rx) {
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        leftFront.setPower((x + y + rx)/denominator/b);
-        leftBack.setPower((x - y + rx)/denominator/b);
-        rightBack.setPower((x + y - rx)/denominator/b);
-        rightFront.setPower((x - y - rx)/denominator/b);
+        leftFront.setPower((y + x + rx)/denominator/b);
+        leftBack.setPower((y - x + rx)/denominator/b);
+        rightBack.setPower((y + x - rx)/denominator/b);
+        rightFront.setPower((y - x - rx)/denominator/b);
     }
     public void offMotors(){
         leftFront.setPower(0);
